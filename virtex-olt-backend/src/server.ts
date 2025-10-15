@@ -13,6 +13,7 @@ app.get("/", () => {
   return { status: "OK" };
 });
 
+// TODO: Para sistemas simples não é necessário dividir o código em camadas (controller, service, use cases, ...), adicionar caso o sistema cresça.
 app.get("/olt-data", async () => {
   return prisma.oltData.findMany();
 });
