@@ -2,13 +2,18 @@ import fastify from "fastify";
 import { prisma } from "./lib/prisma.js";
 import { saveOltDataOnInit } from "./save-olt-data-on-init.js";
 import type { OltData } from "@prisma/client";
+import fastifyCors from "@fastify/cors";
 
 const HOST = process.env.HOST ?? "0.0.0.0";
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3333;
 
 saveOltDataOnInit();
 
-const app = fastify({ logger: true });
+const app = fastify({ logger: true, trustProxy: true });
+
+app.register(fastifyCors, {
+  origin: "*",
+});
 
 app.get("/", () => {
   return { status: "OK" };
