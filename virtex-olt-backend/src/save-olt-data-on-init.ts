@@ -11,7 +11,7 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export async function onInit(): Promise<void> {
+export async function saveOltOnInit(): Promise<void> {
   try {
     const huaweiFile = fs.readFileSync(
       __dirname + "/../data/OntInfo - Huawei.txt",
