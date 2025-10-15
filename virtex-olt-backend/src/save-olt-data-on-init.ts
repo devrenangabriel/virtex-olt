@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import { parseHuaweiOltData } from "./utils/parsers/huawei-parser.js";
 import { prisma } from "./lib/prisma.js";
 import {
@@ -8,27 +7,28 @@ import {
   parseZteStateOltData,
 } from "./utils/parsers/zte-parsers.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+function getDataPath(filename: string): string {
+  return path.resolve(process.cwd(), "data", filename);
+}
 
-export async function saveOltOnInit(): Promise<void> {
+export async function saveOltDataOnInit(): Promise<void> {
   try {
     const huaweiFile = fs.readFileSync(
-      __dirname + "/../data/OntInfo - Huawei.txt",
+      getDataPath("OntInfo - Huawei.txt"),
       "utf8"
     );
 
     const huaweiOltData = parseHuaweiOltData(huaweiFile);
 
     const zteFile = fs.readFileSync(
-      __dirname + "/../data/OntInfo - ZTE - SNs.txt",
+      getDataPath("OntInfo - ZTE - SNs.txt"),
       "utf8"
     );
 
     const zteOltData = parseZteOltData(zteFile);
 
     const zteStateFile = fs.readFileSync(
-      __dirname + "/../data/OntInfo - ZTE - SNs - State.txt",
+      getDataPath("OntInfo - ZTE - SNs - State.txt"),
       "utf8"
     );
 

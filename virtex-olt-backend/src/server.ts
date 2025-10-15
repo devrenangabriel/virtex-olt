@@ -1,12 +1,12 @@
 import fastify from "fastify";
 import { prisma } from "./lib/prisma.js";
-import { saveOltOnInit } from "./save-olt-data-on-init.js";
-import type { OltData } from "./generated/prisma/index.js";
+import { saveOltDataOnInit } from "./save-olt-data-on-init.js";
+import type { OltData } from "@prisma/client";
 
 const HOST = process.env.HOST ?? "0.0.0.0";
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3333;
 
-saveOltOnInit();
+saveOltDataOnInit();
 
 const app = fastify({ logger: true });
 
