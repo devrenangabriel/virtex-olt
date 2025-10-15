@@ -1,0 +1,21 @@
+services:
+  db_virtex_olt:
+    image: postgres:latest
+    container_name: db_virtex_olt
+    environment:
+      POSTGRES_DB: "db_virtex_olt"
+      POSTGRES_USER: "user_virtex_olt"
+      POSTGRES_PASSWORD: "password_virtex_olt"
+    ports:
+      - "5432:5432"
+    volumes:
+      - volume_virtex_olt:/var/lib/db/data
+    networks:
+      - network_virtex_olt
+
+volumes:
+  volume_virtex_olt:
+
+networks:
+  network_virtex_olt:
+    driver: bridge
