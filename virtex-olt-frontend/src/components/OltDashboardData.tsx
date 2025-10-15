@@ -16,28 +16,28 @@ export function OltDashboardData() {
   }
 
   return (
-    <div className="mt-4">
+    <div className="overflow-x-auto w-full">
       <h1 className="text-2xl font-bold text-center">
         Total: {query.data.length}
       </h1>
-      <table>
+      <table className="mx-auto">
         <thead>
           <tr>
-            <th className="px-4 py-2">Slot</th>
-            <th className="px-4 py-2">Porta</th>
-            <th className="px-4 py-2">ONT</th>
-            <th className="px-4 py-2">Serial Number</th>
-            <th className="px-4 py-2">Estado</th>
+            <th className="px-2 py-1 md:px-4 md:py-2">Slot</th>
+            <th className="px-2 py-1 md:px-4 md:py-2">Porta</th>
+            <th className="px-2 py-1 md:px-4 md:py-2">ONT</th>
+            <th className="px-2 py-1 md:px-4 md:py-2">Serial Number</th>
+            <th className="px-2 py-1 md:px-4 md:py-2">Estado</th>
           </tr>
         </thead>
         <tbody>
           {query.data.map((item, index) => (
             <tr key={index} className="text-center">
-              <td className="border px-4 py-2">{item.slot}</td>
-              <td className="border px-4 py-2">{item.port}</td>
-              <td className="border px-4 py-2">{item.ont}</td>
-              <td className="border px-4 py-2">{item.sn}</td>
-              <td className="border px-4 py-2">
+              <td className="border px-2 py-1 md:px-4 md:py-2">{item.slot}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2">{item.port}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2">{item.ont}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2">{item.sn}</td>
+              <td className="border px-2 py-1 md:px-4 md:py-2">
                 {item.state === "online" ? (
                   <span className="text-green-500 font-bold">Online</span>
                 ) : (
