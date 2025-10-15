@@ -22,7 +22,7 @@ export function isZteOltData(data: string): boolean {
  * @returns {Array<{slot: string, port: string, ont: string, sn: string, state: string}>} - Retorna uma lista de objetos com as informações extraídas.
  * @throws {Error} - Lança um erro se os dados não forem de uma OLT ZTE.
  */
-function parseZteOltData(data: string): Array<{
+export function parseZteOltData(data: string): Array<{
   slot: string;
   port: string;
   ont: string;
@@ -130,7 +130,7 @@ export function parseZteStateOltData(data: string): Array<{
   slot: string;
   port: string;
   ont: string;
-  state: string;
+  state: string | null;
 }> {
   if (!isZteStateOltData(data)) {
     throw new Error("Os dados fornecidos não são de uma OLT ZTE.");
@@ -175,16 +175,19 @@ export function parseZteStateOltData(data: string): Array<{
       throw new Error(`Formato inesperado para SLOT/PORT: ${line}`);
     }
 
-    if (!columns[STATE_INDEX]) {
-      throw new Error(`Formato inesperado para STATE: ${line}`);
-    }
-
     return {
       slot: slotAndPort[1],
       port: slotAndPort[2],
       ont: slotPortAndOnt[1],
-      state:
-        columns[STATE_INDEX].toLowerCase() === "working" ? "online" : "offline",
+      state: (() => {
+        if (!columns[STATE_INDEX]) {
+          return null;
+        }
+
+        return columns[STATE_INDEX].toLowerCase() === "working"
+          ? "online"
+          : "offline";
+      })(),
     };
   });
 }

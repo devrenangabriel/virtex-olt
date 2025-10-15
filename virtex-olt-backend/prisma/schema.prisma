@@ -9,12 +9,12 @@ datasource db {
 }
 
 model OltData {
-  id    Int    @id @default(autoincrement())
+  id    Int     @id @default(autoincrement())
   slot  String
   port  String
   ont   String
   sn    String
-  state String
+  state String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

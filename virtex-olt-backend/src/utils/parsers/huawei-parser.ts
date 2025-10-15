@@ -25,7 +25,7 @@ export function isHuaweiOltData(data: string): boolean {
  * @returns {Array<{slot: string, port: string, ont: string, sn: string, state: string}>} - Retorna uma lista de objetos com as informações extraídas.
  * @throws {Error} - Lança um erro se os dados não forem de uma OLT Huawei.
  */
-function parseHuaweiOltData(data: string): Array<{
+export function parseHuaweiOltData(data: string): Array<{
   slot: string;
   port: string;
   ont: string;
