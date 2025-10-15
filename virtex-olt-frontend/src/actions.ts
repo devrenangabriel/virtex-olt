@@ -1,4 +1,5 @@
 interface OltData {
+  id: number;
   slot: string;
   port: string;
   ont: string;
