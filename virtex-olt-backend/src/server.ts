@@ -41,7 +41,7 @@ app.post("/olt-data", async (request, reply) => {
 });
 
 app.get("/olt-data", async () => {
-  return prisma.oltData.findMany();
+  return prisma.oltData.findMany({ orderBy: { id: "desc" } });
 });
 
 app.patch("/olt-data", async (request, reply) => {
