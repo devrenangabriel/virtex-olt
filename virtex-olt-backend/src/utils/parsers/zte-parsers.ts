@@ -1,5 +1,3 @@
-import fs from "fs";
-
 // Todos os dados estão separados por mais de um espaço
 const SPLIT_REGEX = /\s{2,}/;
 
@@ -8,7 +6,7 @@ const SPLIT_REGEX = /\s{2,}/;
  * @param {string} data - O conteúdo de texto do arquivo.
  * @returns {boolean} - Retorna true se todas as palavras-chave de cabeçalho forem encontradas.
  */
-function isZteOltData(data) {
+export function isZteOltData(data: string): boolean {
   const requiredKeywords = ["OnuIndex", "Type", "Mode", "AuthInfo", "State"];
 
   const normalizedData = data.toLowerCase();
@@ -24,7 +22,13 @@ function isZteOltData(data) {
  * @returns {Array<{slot: string, port: string, ont: string, sn: string, state: string}>} - Retorna uma lista de objetos com as informações extraídas.
  * @throws {Error} - Lança um erro se os dados não forem de uma OLT ZTE.
  */
-function parseZteOltData(data) {
+function parseZteOltData(data: string): Array<{
+  slot: string;
+  port: string;
+  ont: string;
+  sn: string;
+  state: string;
+}> {
   if (!isZteOltData(data)) {
     throw new Error("Os dados fornecidos não são de uma OLT ZTE.");
   }
@@ -51,27 +55,53 @@ function parseZteOltData(data) {
   return trimmedRelevantLines.map((line) => {
     const columns = line.split(SPLIT_REGEX);
 
+    if (!columns[FSP_AND_ONT_INDEX]) {
+      throw new Error(`Formato inesperado para SLOT/PORT/ONT: ${line}`);
+    }
+
     const slotPortAndOnt = columns[FSP_AND_ONT_INDEX].replace(
       "gpon-onu_",
       ""
     ).split(":");
 
+    if (!slotPortAndOnt[0] || !slotPortAndOnt[1]) {
+      throw new Error(`Formato inesperado para SLOT/PORT/ONT: ${line}`);
+    }
+
     const slotAndPort = slotPortAndOnt[0].split("/");
+
+    if (!slotAndPort[1] || !slotAndPort[2]) {
+      throw new Error(`Formato inesperado para SLOT/PORT: ${line}`);
+    }
+
+    if (!columns[SN_INDEX]) {
+      throw new Error(`Formato inesperado para SN: ${line}`);
+    }
 
     return {
       slot: slotAndPort[1],
       port: slotAndPort[2],
       ont: slotPortAndOnt[1],
-      sn: columns[SN_INDEX].replace("SN:"),
+      sn: columns[SN_INDEX].replace("SN:", ""),
       // TODO: Esse state deveria ser retornado já que temos outro arquivo para isso?
       state: columns[STATE_INDEX] === "ready" ? "online" : "offline",
     };
   });
 }
 
-const dataZte = fs.readFileSync("OntInfo - ZTE - SNs.txt", "utf8");
+// import fs from "fs";
+// import path from "path";
+// import { fileURLToPath } from "url";
 
-console.log(parseZteOltData(dataZte));
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// const dataZte = fs.readFileSync(
+//   __dirname + "/../../../data/OntInfo - ZTE - SNs.txt",
+//   "utf8"
+// );
+
+// console.log(parseZteOltData(dataZte));
 
 // Regex para identificar linhas que começam com "número/" (exemplo 0/, 1/, etc.)
 const ANY_NUMBER_WITH_SLASH_REGEX = /\d+\//;
@@ -80,7 +110,7 @@ const ANY_NUMBER_WITH_SLASH_REGEX = /\d+\//;
  * @param {string} data - O conteúdo de texto do arquivo.
  * @returns {boolean} - Retorna true se todas as palavras-chave de cabeçalho forem encontradas.
  */
-function isZteStateOltData(data) {
+function isZteStateOltData(data: string): boolean {
   const requiredKeywords = [
     "OnuIndex",
     "Admin State",
@@ -96,7 +126,12 @@ function isZteStateOltData(data) {
   );
 }
 
-function parseZteStateOltData(data) {
+export function parseZteStateOltData(data: string): Array<{
+  slot: string;
+  port: string;
+  ont: string;
+  state: string;
+}> {
   if (!isZteStateOltData(data)) {
     throw new Error("Os dados fornecidos não são de uma OLT ZTE.");
   }
@@ -124,11 +159,25 @@ function parseZteStateOltData(data) {
   return trimmedRelevantLines.map((line) => {
     const columns = line.split(SPLIT_REGEX);
 
-    console.log(columns);
+    if (!columns[FSP_AND_ONT_INDEX]) {
+      throw new Error(`Formato inesperado para SLOT/PORT/ONT: ${line}`);
+    }
 
     const slotPortAndOnt = columns[FSP_AND_ONT_INDEX].split(":");
 
+    if (!slotPortAndOnt[0] || !slotPortAndOnt[1]) {
+      throw new Error(`Formato inesperado para SLOT/PORT/ONT: ${line}`);
+    }
+
     const slotAndPort = slotPortAndOnt[0].split("/");
+
+    if (!slotAndPort[1] || !slotAndPort[2]) {
+      throw new Error(`Formato inesperado para SLOT/PORT: ${line}`);
+    }
+
+    if (!columns[STATE_INDEX]) {
+      throw new Error(`Formato inesperado para STATE: ${line}`);
+    }
 
     return {
       slot: slotAndPort[1],
@@ -140,9 +189,16 @@ function parseZteStateOltData(data) {
   });
 }
 
-const dataZteStatus = fs.readFileSync(
-  "OntInfo - ZTE - SNs - State.txt",
-  "utf8"
-);
+// import fs from "fs";
+// import path from "path";
+// import { fileURLToPath } from "url";
 
-console.log(parseZteStateOltData(dataZteStatus));
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// const dataZteStatus = fs.readFileSync(
+//   __dirname + "/../../../data/OntInfo - ZTE - SNs - State.txt",
+//   "utf8"
+// );
+
+// console.log(parseZteStateOltData(dataZteStatus));
