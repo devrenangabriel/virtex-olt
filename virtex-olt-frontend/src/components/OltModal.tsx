@@ -89,9 +89,13 @@ export function OltModal({
             <p className="text-center">Estado</p>
             <select
               name="state"
-              defaultValue={
-                editingData?.state === "online" ? "online" : "offline"
-              }
+              defaultValue={(() => {
+                if (!editingData?.state) {
+                  return "online";
+                }
+
+                return editingData?.state === "online" ? "online" : "offline";
+              })()}
               className="outline h-6 outline-gray-500 rounded font-bold cursor-pointer"
             >
               <option value="online" className="font-bold text-green-500">

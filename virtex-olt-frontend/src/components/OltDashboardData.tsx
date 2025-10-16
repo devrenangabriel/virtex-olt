@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getOltData, updateOltData, type OltData } from "../actions";
+import {
+  createOltData,
+  getOltData,
+  updateOltData,
+  type OltData,
+} from "../actions";
 import { useState, type JSX } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import { OltModal } from "./OltModal";
 
 const DEFAULT_CELL_STYLE = "px-2 py-1 md:px-4 md:py-2";
@@ -76,7 +81,20 @@ export function OltDashboardData(): JSX.Element {
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  const createMutation = useMutation({
+    mutationFn: createOltData,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["oltData"] });
+
+      alert("Dado criada com sucesso!");
+    },
+    onError: (error) => {
+      console.error("Erro ao criar dado:", error);
+      alert("Erro ao atualizar dados.");
+    },
+  });
+
+  const updateMutation = useMutation({
     mutationFn: updateOltData,
     onSuccess: (_data, variables: OltData[]) => {
       queryClient.setQueryData(["oltData"], (oldData?: OltData[]) => {
@@ -109,6 +127,7 @@ export function OltDashboardData(): JSX.Element {
       <h1 className="text-2xl font-bold text-center">
         Total: {query.data.length}
       </h1>
+
       <table className="mx-auto">
         <thead>
           <tr>
@@ -138,6 +157,20 @@ export function OltDashboardData(): JSX.Element {
         </tbody>
       </table>
 
+      <div className="fixed top-32 flex w-full pointer-events-none">
+        <div className="mx-auto flex w-full max-w-[642px] justify-end px-4 lg:px-0">
+          <button
+            className="cursor-pointer flex justify-center items-center bg-red-500 h-16 w-16 rounded-full text-white border pointer-events-auto transition-colors duration-200 hover:bg-red-600"
+            onClick={() => {
+              setEditingData(undefined);
+              setIsOltModalOpen(true);
+            }}
+          >
+            <Plus />
+          </button>
+        </div>
+      </div>
+
       <OltModal
         isOpen={isOltModalOpen}
         onClose={() => {
@@ -145,8 +178,11 @@ export function OltDashboardData(): JSX.Element {
         }}
         onSave={(oltData: Omit<OltData, "id"> & { id: number | undefined }) => {
           if (oltData.id) {
-            mutation.mutate([{ ...(oltData as OltData) }]);
+            updateMutation.mutate([{ ...(oltData as OltData) }]);
+          } else {
+            createMutation.mutate([oltData]);
           }
+
           setIsOltModalOpen(false);
           setEditingData(undefined);
         }}

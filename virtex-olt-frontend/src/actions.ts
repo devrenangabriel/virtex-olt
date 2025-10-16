@@ -20,6 +20,18 @@ export async function getOltData(): Promise<OltData[]> {
   );
 }
 
+export async function createOltData(
+  data: Omit<OltData, "id">[]
+): Promise<void> {
+  await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/olt-data`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
 export async function updateOltData(data: OltData[]): Promise<void> {
   await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/olt-data`, {
     method: "PATCH",
