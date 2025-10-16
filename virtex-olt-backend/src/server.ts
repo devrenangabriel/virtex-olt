@@ -12,7 +12,9 @@ saveOltDataOnInit();
 const app = fastify({ logger: true, trustProxy: true });
 
 app.register(fastifyCors, {
+  // TODO: Ajustar para o domínio correto em produção
   origin: "*",
+  methods: ["GET", "POST", "PATCH", "DELETE"],
 });
 
 app.get("/", () => {
