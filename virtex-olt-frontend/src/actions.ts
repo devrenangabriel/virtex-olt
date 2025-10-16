@@ -41,3 +41,13 @@ export async function updateOltData(data: OltData[]): Promise<void> {
     body: JSON.stringify(data),
   });
 }
+
+export async function deleteOltData(data: { ids: number[] }): Promise<void> {
+  await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/olt-data`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}

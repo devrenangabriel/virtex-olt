@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createOltData,
+  deleteOltData,
   getOltData,
   updateOltData,
   type OltData,
 } from "../actions";
 import { useState, type JSX } from "react";
-import { Pencil, Plus } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { OltModal } from "./OltModal";
 
 const DEFAULT_CELL_STYLE = "px-2 py-1 md:px-4 md:py-2";
@@ -31,6 +32,7 @@ interface BodyRowProps {
   sn: string;
   state: string | null;
   onEdit: (oltData: OltData) => void;
+  onDelete: (id: number) => void;
 }
 
 function BodyRow({
@@ -41,6 +43,7 @@ function BodyRow({
   sn,
   state,
   onEdit,
+  onDelete,
 }: BodyRowProps): JSX.Element {
   return (
     <tr className="text-center">
@@ -57,10 +60,18 @@ function BodyRow({
       </BodyCell>
       <td>
         <button
-          onClick={() => onEdit({ id, slot, port, ont, sn, state })} // id is a placeholder
-          className={`${DEFAULT_CELL_STYLE} text-2xl reverse cursor-pointer transition-colors hover:bg-gradient-to-tl hover:from-white/10 duration-200`}
+          onClick={() => onEdit({ id, slot, port, ont, sn, state })}
+          className={`${DEFAULT_CELL_STYLE} reverse cursor-pointer transition-colors hover:bg-gradient-to-tl hover:from-white/10 duration-200`}
         >
           <Pencil />
+        </button>
+      </td>
+      <td>
+        <button
+          onClick={() => onDelete(id)}
+          className={`${DEFAULT_CELL_STYLE} cursor-pointer transition-colors hover:bg-gradient-to-tl hover:from-white/10 duration-200`}
+        >
+          <Trash2 />
         </button>
       </td>
     </tr>
@@ -114,6 +125,23 @@ export function OltDashboardData(): JSX.Element {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: deleteOltData,
+    onSuccess: (_data, variables: { ids: number[] }) => {
+      queryClient.setQueryData(["oltData"], (oldData?: OltData[]) => {
+        if (!oldData || !Array.isArray(oldData)) return oldData;
+
+        return oldData.filter((item) => !variables.ids.includes(item.id));
+      });
+
+      alert("Dados deletados com sucesso!");
+    },
+    onError: (error) => {
+      console.error("Erro ao deletar dados:", error);
+      alert("Erro ao deletar dados.");
+    },
+  });
+
   if (query.isLoading) {
     return <div>Carregando...</div>;
   }
@@ -152,13 +180,16 @@ export function OltDashboardData(): JSX.Element {
                 setEditingData(data);
                 setIsOltModalOpen(true);
               }}
+              onDelete={(id) => {
+                deleteMutation.mutate({ ids: [id] });
+              }}
             />
           ))}
         </tbody>
       </table>
 
       <div className="fixed top-32 flex w-full pointer-events-none">
-        <div className="mx-auto flex w-full max-w-[642px] justify-end px-4 lg:px-0">
+        <div className="mx-auto flex w-full max-w-[698px] justify-end px-4 lg:px-0">
           <button
             className="cursor-pointer flex justify-center items-center bg-red-500 h-16 w-16 rounded-full text-white border pointer-events-auto transition-colors duration-200 hover:bg-red-600"
             onClick={() => {
