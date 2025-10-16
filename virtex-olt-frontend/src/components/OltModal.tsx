@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import type { OltData } from "../actions";
 import { Modal } from "./Modal";
+import { toast } from "react-toastify";
 
 interface OltModalProps {
   isOpen: boolean;
@@ -37,6 +38,16 @@ export function OltModal({
             state: String(formData.get("state")),
             id: undefined,
           };
+
+          if (
+            data?.slot.length === 0 ||
+            data?.port.length === 0 ||
+            data?.ont.length === 0 ||
+            data?.sn.length === 0
+          ) {
+            toast.error("Por favor, preencha todos os campos.");
+            return;
+          }
 
           if (editingData?.id) {
             data.id = editingData.id;

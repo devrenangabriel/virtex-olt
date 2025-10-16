@@ -10,6 +10,7 @@ import { useState, type JSX } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { OltModal } from "./OltModal";
 import { DeleteOltModal } from "./DeleteOltModal";
+import { toast } from "react-toastify";
 
 const DEFAULT_CELL_STYLE = "px-2 py-1 md:px-4 md:py-2";
 
@@ -105,11 +106,11 @@ export function OltDashboardData(): JSX.Element {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["oltData"] });
 
-      alert("Dado criada com sucesso!");
+      toast.success("Dado criada com sucesso!");
     },
     onError: (error) => {
       console.error("Erro ao criar dado:", error);
-      alert("Erro ao atualizar dados.");
+      toast.error("Erro ao criar dado.");
     },
   });
 
@@ -125,11 +126,11 @@ export function OltDashboardData(): JSX.Element {
         });
       });
 
-      alert("Dados atualizados com sucesso!");
+      toast.success("Dados atualizados com sucesso!");
     },
     onError: (error) => {
       console.error("Erro ao atualizar dados:", error);
-      alert("Erro ao atualizar dados.");
+      toast.error("Erro ao atualizar dados.");
     },
   });
 
@@ -142,11 +143,11 @@ export function OltDashboardData(): JSX.Element {
         return oldData.filter((item) => !variables.ids.includes(item.id));
       });
 
-      alert("Dados deletados com sucesso!");
+      toast.success("Dados deletados com sucesso!");
     },
     onError: (error) => {
       console.error("Erro ao deletar dados:", error);
-      alert("Erro ao deletar dados.");
+      toast.error("Erro ao deletar dados.");
     },
   });
 
