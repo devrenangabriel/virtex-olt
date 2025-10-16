@@ -23,31 +23,52 @@ export async function getOltData(): Promise<OltData[]> {
 export async function createOltData(
   data: Omit<OltData, "id">[]
 ): Promise<void> {
-  await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/olt-data`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BACKEND_URL}/olt-data`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to create OLT data: " + response.statusText);
+  }
 }
 
 export async function updateOltData(data: OltData[]): Promise<void> {
-  await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/olt-data`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BACKEND_URL}/olt-data`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update OLT data: " + response.statusText);
+  }
 }
 
 export async function deleteOltData(data: { ids: number[] }): Promise<void> {
-  await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/olt-data`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BACKEND_URL}/olt-data`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to delete OLT data: " + response.statusText);
+  }
 }
