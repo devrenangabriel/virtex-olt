@@ -62,7 +62,7 @@ function BodyRow({
       <td>
         <button
           onClick={() => onEdit({ id, slot, port, ont, sn, state })}
-          className={`${DEFAULT_CELL_STYLE} reverse cursor-pointer transition-colors hover:bg-gradient-to-tl hover:from-white/10 duration-200`}
+          className={`${DEFAULT_CELL_STYLE} reverse cursor-pointer transition-colors hover:bg-gradient-to-tr hover:from-black/10 duration-200`}
         >
           <Pencil />
         </button>
@@ -70,7 +70,7 @@ function BodyRow({
       <td>
         <button
           onClick={() => onDelete({ id, slot, port, ont, sn, state })}
-          className={`${DEFAULT_CELL_STYLE} cursor-pointer transition-colors hover:bg-gradient-to-tl hover:from-white/10 duration-200`}
+          className={`${DEFAULT_CELL_STYLE} cursor-pointer transition-colors hover:bg-gradient-to-tr hover:from-black/10 duration-200`}
         >
           <Trash2 />
         </button>
@@ -164,6 +164,15 @@ export function OltDashboardData(): JSX.Element {
         Total: {query.data.length}
       </h1>
 
+      <div className="flex justify-center gap-8">
+        <p className="text-green-500 font-bold">
+          Online: {query.data.filter((item) => item.state === "online").length}
+        </p>
+        <p className="text-red-500 font-bold">
+          Offline: {query.data.filter((item) => item.state !== "online").length}
+        </p>
+      </div>
+
       <table className="mx-auto">
         <thead>
           <tr>
@@ -204,7 +213,7 @@ export function OltDashboardData(): JSX.Element {
       <div className="fixed top-32 flex w-full pointer-events-none">
         <div className="mx-auto flex w-full max-w-[698px] justify-end px-4 lg:px-0">
           <button
-            className="cursor-pointer flex justify-center items-center bg-red-500 h-16 w-16 rounded-full text-white border pointer-events-auto transition-colors duration-200 hover:bg-red-600"
+            className="cursor-pointer flex justify-center items-center h-16 w-16 rounded-full border pointer-events-auto bg-gradient-to-r from-red-500 from-40% to-red-950 text-white hover:opacity-90 transition-colors duration-200"
             onClick={() => {
               setEditingData(undefined);
               setIsOltModalOpen(true);

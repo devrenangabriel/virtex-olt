@@ -47,7 +47,7 @@ export function OltModal({
         }}
         className="flex flex-col gap-4 items-center"
       >
-        <div className="flex items-end justify-center p-4 bg-gradient-to-r from-gray-200 to-gray-200/50">
+        <div className="flex items-end justify-center p-4 bg-gradient-to-r from-gray-100 to-gray-100/50">
           <div className="flex flex-col max-w-[15%] gap-2">
             <p className="text-center">Slot</p>
             <input
@@ -109,14 +109,14 @@ export function OltModal({
 
         <div className="flex gap-2 justify-end w-full px-4">
           <button
-            className=" cursor-pointer rounded w-[100px] py-1 font-semibold border hover:bg-gray-200 transition-colors"
+            className=" cursor-pointer rounded w-[100px] py-1 font-semibold border hover:bg-gray-200 transition-colors duration-200"
             type="button"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className=" cursor-pointer bg-red-500 w-[100px] rounded py-1 text-white font-semibold hover:bg-red-600 transition-colors"
+            className=" cursor-pointer w-[100px] rounded py-1 font-semibold bg-gradient-to-r from-red-500 from-40% to-red-950 text-white hover:opacity-90 transition-colors"
             type="submit"
           >
             Salvar
