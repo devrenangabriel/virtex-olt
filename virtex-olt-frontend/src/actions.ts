@@ -1,4 +1,4 @@
-interface OltData {
+export interface OltData {
   id: number;
   slot: string;
   port: string;
@@ -18,4 +18,14 @@ export async function getOltData(): Promise<OltData[]> {
       return response.json();
     }
   );
+}
+
+export async function updateOltData(data: OltData[]): Promise<void> {
+  await fetch(`${import.meta.env.VITE_API_BACKEND_URL}/olt-data`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 }
