@@ -1,27 +1,26 @@
 import type { JSX } from "react";
 import type { OltData } from "../actions";
+import { Modal } from "./Modal";
 
 interface OltModalProps {
   isOpen: boolean;
   onClose: () => void;
   editingData?: OltData;
-  onSave: (data: Omit<OltData, "id"> & { id: number | undefined }) => void;
+  onConfirm: (data: Omit<OltData, "id"> & { id: number | undefined }) => void;
 }
 
 export function OltModal({
   isOpen,
   onClose,
   editingData,
-  onSave,
+  onConfirm,
 }: OltModalProps): JSX.Element | null {
   if (!isOpen) {
     return null;
   }
 
-  console.log("Editing data:", editingData);
-
   return (
-    <div className="fixed flex flex-col items-center justify-center place-self-center inset-0 bg-white text-black py-4 rounded max-w-[530px] gap-4 w-[calc(100dvw-2rem)]">
+    <Modal isOpen={isOpen}>
       <h2 className="font-semibold text-xl">
         {editingData ? "Edição" : "Criação"}
       </h2>
@@ -43,7 +42,7 @@ export function OltModal({
             data.id = editingData.id;
           }
 
-          onSave(data);
+          onConfirm(data);
           onClose();
         }}
         className="flex flex-col gap-4 items-center"
@@ -124,6 +123,6 @@ export function OltModal({
           </button>
         </div>
       </form>
-    </div>
+    </Modal>
   );
 }

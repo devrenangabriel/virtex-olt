@@ -9,6 +9,7 @@ import {
 import { useState, type JSX } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { OltModal } from "./OltModal";
+import { DeleteOltModal } from "./DeleteOltModal";
 
 const DEFAULT_CELL_STYLE = "px-2 py-1 md:px-4 md:py-2";
 
@@ -32,7 +33,7 @@ interface BodyRowProps {
   sn: string;
   state: string | null;
   onEdit: (oltData: OltData) => void;
-  onDelete: (id: number) => void;
+  onDelete: (oltData: OltData) => void;
 }
 
 function BodyRow({
@@ -68,7 +69,7 @@ function BodyRow({
       </td>
       <td>
         <button
-          onClick={() => onDelete(id)}
+          onClick={() => onDelete({ id, slot, port, ont, sn, state })}
           className={`${DEFAULT_CELL_STYLE} cursor-pointer transition-colors hover:bg-gradient-to-tl hover:from-white/10 duration-200`}
         >
           <Trash2 />
@@ -82,6 +83,13 @@ export function OltDashboardData(): JSX.Element {
   const [isOltModalOpen, setIsOltModalOpen] = useState<boolean>(false);
 
   const [editingData, setEditingData] = useState<OltData | undefined>(
+    undefined
+  );
+
+  const [isDeletOltModalOpen, setIsDeleteOltModalOpen] =
+    useState<boolean>(false);
+
+  const [deletingData, setDeletingData] = useState<OltData | undefined>(
     undefined
   );
 
@@ -177,11 +185,16 @@ export function OltDashboardData(): JSX.Element {
               sn={item.sn}
               state={item.state}
               onEdit={(data) => {
+                setIsDeleteOltModalOpen(false);
+                setDeletingData(undefined);
                 setEditingData(data);
                 setIsOltModalOpen(true);
               }}
-              onDelete={(id) => {
-                deleteMutation.mutate({ ids: [id] });
+              onDelete={(data) => {
+                setIsOltModalOpen(false);
+                setEditingData(undefined);
+                setDeletingData(data);
+                setIsDeleteOltModalOpen(true);
               }}
             />
           ))}
@@ -207,7 +220,9 @@ export function OltDashboardData(): JSX.Element {
         onClose={() => {
           setIsOltModalOpen(false);
         }}
-        onSave={(oltData: Omit<OltData, "id"> & { id: number | undefined }) => {
+        onConfirm={(
+          oltData: Omit<OltData, "id"> & { id: number | undefined }
+        ) => {
           if (oltData.id) {
             updateMutation.mutate([{ ...(oltData as OltData) }]);
           } else {
@@ -218,6 +233,20 @@ export function OltDashboardData(): JSX.Element {
           setEditingData(undefined);
         }}
         editingData={editingData}
+      />
+
+      <DeleteOltModal
+        isOpen={isDeletOltModalOpen}
+        onClose={() => {
+          setIsDeleteOltModalOpen(false);
+          setDeletingData(undefined);
+        }}
+        deletingData={deletingData}
+        onDelete={(id) => {
+          deleteMutation.mutate({ ids: [id] });
+          setIsDeleteOltModalOpen(false);
+          setDeletingData(undefined);
+        }}
       />
     </div>
   );
