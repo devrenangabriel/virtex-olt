@@ -1,4 +1,4 @@
-time=15
+time=7
 
 echo "Waiting for $time seconds before run the migrations and start the application..."
 

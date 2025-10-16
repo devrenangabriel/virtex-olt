@@ -23,6 +23,20 @@ services:
     depends_on:
       - db_virtex_olt
     env_file: ./virtex-olt-backend/.env
+
+    networks:
+      - network_virtex_olt
+
+  virtex_olt_frontend:
+    container_name: virtex_olt_frontend
+    build:
+      context: ./virtex-olt-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - virtex_olt_backend
+    env_file: ./virtex-olt-frontend/.env
     networks:
       - network_virtex_olt
 
