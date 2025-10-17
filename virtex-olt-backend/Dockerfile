@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -19,4 +19,4 @@ RUN chmod +x /await-db.sh
 
 EXPOSE 3333
 
-CMD ["/bin/bash", "./await-db.sh"]
+CMD ["sh", "/await-db.sh"]
