@@ -3,12 +3,15 @@ FROM node:20
 WORKDIR /app
 
 COPY package*.json ./
+COPY prisma/schema.prisma ./prisma/
 
-RUN npm install
+RUN npm install 
+
+RUN npx prisma generate 
 
 COPY . .
 
-RUN npm run build
+RUN npm run build 
 
 COPY await-db.sh /await-db.sh
 
