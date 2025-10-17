@@ -23,7 +23,7 @@ docker-compose up -d --build
 ### Comando completo
 
 ```bash
-cp virtex-olt-backend/.env.example virtex-olt-backend/.env && cp virtex-olt-frontend/.env.example virtex-olt-frontend/.env && docker-compose up -d --build
+cp virtex-olt-backend/.env.example virtex-olt-backend/.env && cp virtex-olt-frontend/.env.example virtex-olt-frontend/.env && docker compose up -d --build
 ```
 
 ### Obs: O banco de dados demora um pouco para iniciar, então se der erro de conexão, aguarde alguns segundos e tente novamente.
